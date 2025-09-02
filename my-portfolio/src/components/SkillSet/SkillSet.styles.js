@@ -7,8 +7,11 @@ export const Chips = styled.div`
 `
 export const Chip = styled.span`
   background: ${({ theme }) => theme.colors.chip};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  border: 1px solid ${({ theme }) => theme.colors.chipBorder};
   padding: 8px 10px;
   border-radius: 999px;
   font-size: 12px;
-`
+  color: ${({ theme }) => theme.colors.text};
+  &:hover { background: ${({ theme }) => theme.colors.accentSoft}; }
+`;
+

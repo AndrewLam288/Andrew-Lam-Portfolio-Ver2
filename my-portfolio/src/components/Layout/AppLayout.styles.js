@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 export const Shell = styled.div`
   max-width: 1440px;
@@ -16,10 +16,10 @@ export const Shell = styled.div`
   }
 `;
 
-/* Shared card container used by Sidebar, SkillSet, Expertise, Contact, etc. */
 export const Card = styled.section`
   background: ${({ theme }) => theme.colors.card};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.radius};
   box-shadow: ${({ theme }) => theme.shadow};
 `;
+
