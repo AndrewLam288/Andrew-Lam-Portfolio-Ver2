@@ -1,15 +1,16 @@
 import { NavLink } from 'react-router-dom'
 import ThemeToggle from '../ThemeToggle/ThemeToggle'
 import { Wrapper, Avatar, Name, Role, ResumeBtn, Nav, NavLinkItem } from './Sidebar.styles'
+import avatarImg from '../../assets/Andrew Lam Avatar.jpg'
 
 export default function Sidebar({ mode, onToggle }) {
   return (
     <Wrapper>
-      <Avatar />
-      <Name>Your Name</Name>
-      <Role>Front-End Developer</Role>
+      <Avatar src={avatarImg} alt="Andrew Lam" />
+      <Name>Andrew Lam</Name>
+      <Role>Junior Software Engineer</Role>
 
-      <ResumeBtn href="/src/assets/resume.pdf" target="_blank" rel="noreferrer">
+      <ResumeBtn href="/src/assets/Andrew Lam Resume.pdf" target="_blank" rel="noreferrer">
         Resume
       </ResumeBtn>
 

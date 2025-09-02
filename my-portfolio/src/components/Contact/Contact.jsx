@@ -1,4 +1,4 @@
-import { FaGithub, FaLinkedin, FaEnvelope, FaXTwitter } from 'react-icons/fa6'
+import { FaGithub, FaLinkedin, FaEnvelope, FaFacebook } from 'react-icons/fa6'
 import { Wrap, Row, IconBtn } from './Contact.styles'
 
 export default function Contact() {
@@ -6,13 +6,15 @@ export default function Contact() {
     <Wrap>
       <h3 style={{ marginTop: 0 }}>Get in touch</h3>
       <Row>
-        <IconBtn href="https://github.com/yourname" target="_blank" rel="noreferrer"><FaGithub /></IconBtn>
-        <IconBtn href="https://linkedin.com/in/yourname" target="_blank" rel="noreferrer"><FaLinkedin /></IconBtn>
-        <IconBtn href="mailto:you@example.com"><FaEnvelope /></IconBtn>
-        <IconBtn href="https://twitter.com/yourname" target="_blank" rel="noreferrer"><FaXTwitter /></IconBtn>
+        <IconBtn href="https://www.facebook.com/Shin301019/" target="_blank" rel="noreferrer">
+          <FaFacebook />
+        </IconBtn>
+        <IconBtn href="https://github.com/AndrewLam288" target="_blank" rel="noreferrer"><FaGithub /></IconBtn>
+        <IconBtn href="https://www.linkedin.com/in/andrew288/" target="_blank" rel="noreferrer"><FaLinkedin /></IconBtn>
+        <IconBtn href="mailto:lamminhtrunghieu288@gmail.com"><FaEnvelope /></IconBtn>
       </Row>
       <p style={{ color: 'var(--subtext)' }}>
-        Let’s build something great together — feel free to connect.
+        Let’s build something great together - please feel free to connect with me.
       </p>
     </Wrap>
   )

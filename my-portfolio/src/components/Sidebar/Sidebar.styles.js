@@ -8,9 +8,11 @@ export const Wrapper = styled(Card)`
   padding: 20px;
 `
 
-export const Avatar = styled.div`
-  width: 88px; height: 88px; border-radius: 50%;
-  background: ${({ theme }) => theme.colors.chip};
+export const Avatar = styled.img`
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
   margin-bottom: 12px;
 `
 
@@ -43,3 +45,4 @@ export const NavLinkItem = styled.a`
   color: ${({ theme }) => theme.colors.text};
   &:hover { background: ${({ theme }) => theme.colors.chip}; }
 `
+

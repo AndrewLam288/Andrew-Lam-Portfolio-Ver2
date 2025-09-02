@@ -2,11 +2,11 @@ import { Wrap, Grid, Stat, H, P } from './CareerStats.styles'
 
 export default function CareerStats() {
   const stats = [
-    { value: '2', label: 'years' },
-    { value: '20', label: 'Certificates' },
-    { value: '12', label: 'Projects' },
-    { value: '20', label: 'Technologies' },
-  ]
+    { value: '1', label: 'years' },
+    { value: '0', label: 'Certificates' },
+    { value: '5', label: 'Projects' },
+    { value: '0', label: 'Techs' },
+  ] 
   return (
     <Wrap>
       <H>Career Stats</H>
