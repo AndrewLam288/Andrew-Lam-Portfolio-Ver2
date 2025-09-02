@@ -3,37 +3,16 @@ import { Card } from '../Layout/AppLayout.styles';
 
 export const Wrap = styled(Card)`
   padding: 16px;
-
-  /* Fixed height so opening rows never pushes other boxes */
-  height: clamp(360px, 48vh, 520px);
-
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* the inner List will scroll */
 `;
 
-export const List = styled.div`
-  flex: 1;
-  overflow: auto;
-
-  /* Reserve gutter so layout never shifts */
-  scrollbar-gutter: stable;
-
-  /* Hide scrollbar UI (keeps scrolling) */
-  scrollbar-width: none;            /* Firefox */
-  -ms-overflow-style: none;         /* IE/Edge legacy */
-  &::-webkit-scrollbar {            /* Chrome/Safari/Edge */
-    width: 0;
-    height: 0;
-  }
-
-  padding-right: 4px;
-`;
+export const List = styled.div``;           // no scroll here
 
 export const Row = styled.button`
   width: 100%;
   display: grid;
-  grid-template-columns: 40px 1fr 16px; /* icon | title | chevron */
+  grid-template-columns: 40px 1fr 16px;
   align-items: center;
   gap: 12px;
   padding: 12px 0;
@@ -75,6 +54,7 @@ export const Chevron = styled.span`
 export const Divider = styled.div`
   height: 1px;
   background: ${({ theme }) => theme.colors.border};
+  margin: 6px 0;
 `;
 
 export const Panel = styled.div`
@@ -82,12 +62,13 @@ export const Panel = styled.div`
   max-height: ${({ $open, $h }) => ($open ? `${$h}px` : '0px')};
   opacity: ${({ $open }) => ($open ? 1 : 0)};
   transition:
-    max-height .28s cubic-bezier(.2,.8,.2,1),
-    opacity .22s ease;
+    max-height .34s cubic-bezier(.2,.8,.2,1),
+    opacity .24s ease;
 `;
 
 export const Body = styled.div`
   color: ${({ theme }) => theme.colors.subtext};
   font-size: 14px;
-  padding: 8px 4px 14px 52px; /* indent under title */
+  line-height: 1.6;
+  padding: 8px 4px 14px 52px;
 `;

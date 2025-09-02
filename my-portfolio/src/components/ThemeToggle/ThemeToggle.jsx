@@ -5,7 +5,7 @@ import styled from 'styled-components';
 const Row = styled.div`
   width: 100%;
   display: flex;
-  align-items: center;           /* vertical center with the switch */
+  align-items: center;
   justify-content: space-between;
 `;
 
@@ -13,7 +13,7 @@ const Row = styled.div`
 const Label = styled.div`
   display: inline-flex;
   align-items: center;
-  gap: 8px;                      /* space between icon and text */
+  gap: 8px;
   font-size: 14px;
   font-weight: 500;
   color: ${({ theme }) => theme.colors.text};
@@ -64,6 +64,13 @@ const Switch = styled.label`
 
 export default function ThemeToggle({ mode, onToggle }) {
   const isDark = mode === 'dark';
+
+  // Always provide a concrete handler so React sees `onChange`.
+  const handleChange = () => {
+    // only call if parent supplied it
+    if (typeof onToggle === 'function') onToggle();
+  };
+
   return (
     <Row>
       <Label>
@@ -71,8 +78,14 @@ export default function ThemeToggle({ mode, onToggle }) {
         {isDark ? 'Dark Mode' : 'Light Mode'}
       </Label>
 
-      <Switch>
-        <input type="checkbox" checked={isDark} onChange={onToggle} />
+      <Switch aria-label="Toggle theme">
+        <input
+          type="checkbox"
+          role="switch"
+          aria-checked={isDark}
+          checked={isDark}
+          onChange={handleChange}
+        />
         <span />
       </Switch>
     </Row>

@@ -12,48 +12,65 @@ export default function SkillSet() {
 
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
-  const [step, setStep] = useState(280);
+  const [cardWidth, setCardWidth] = useState(280); // measured later
 
-  useEffect(() => {
-    const el = firstItemRef.current;
-    if (!el) return;
-    const { width } = el.getBoundingClientRect();
-    setStep(Math.round(width + 20));
-  }, []);
+  // --- measurements ---------------------------------------------------------
+  const measure = () => {
+    // card width (icon + label + internal padding)
+    const node = firstItemRef.current;
+    if (node) {
+      const { width } = node.getBoundingClientRect();
+      setCardWidth(Math.max(180, Math.round(width))); // safety floor
+    }
+    updateEdges();
+  };
+
+  // how far to scroll per click
+  const getStep = () => {
+    const el = railRef.current;
+    if (!el) return 600;
+    // almost a viewport, but never less than 2 cards
+    return Math.max(el.clientWidth * 0.9, cardWidth * 2);
+  };
 
   const updateEdges = () => {
     const el = railRef.current;
     if (!el) return;
     const { scrollLeft, scrollWidth, clientWidth } = el;
-    const epsilon = 3;
-    const atStartNow = scrollLeft <= epsilon;
-    const atEndNow =
-      Math.ceil(scrollLeft + clientWidth) >= Math.floor(scrollWidth) - epsilon;
-    setAtStart(atStartNow);
-    setAtEnd(atEndNow);
+    const nearStart = scrollLeft <= 2;
+    const nearEnd = scrollLeft + clientWidth >= scrollWidth - 2;
+    setAtStart(nearStart);
+    setAtEnd(nearEnd);
   };
 
   useEffect(() => {
     const el = railRef.current;
     if (!el) return;
 
-    updateEdges();
+    // initial measure
+    measure();
+
+    // keep edges/size accurate
     el.addEventListener("scroll", updateEdges, { passive: true });
-    const ro = new ResizeObserver(updateEdges);
+    const ro = new ResizeObserver(measure);
     ro.observe(el);
 
     return () => {
       el.removeEventListener("scroll", updateEdges);
       ro.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // --- smooth scrolling -----------------------------------------------------
   const animateTo = (targetLeft, duration = 520) => {
     const el = railRef.current;
     if (!el) return;
 
     const start = el.scrollLeft;
     const dist = targetLeft - start;
+    if (Math.abs(dist) < 1) return;
+
     const t0 = performance.now();
     const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
 
@@ -68,40 +85,43 @@ export default function SkillSet() {
   const scrollLeftBy = () => {
     const el = railRef.current;
     if (!el) return;
+    const step = getStep();
     animateTo(Math.max(0, el.scrollLeft - step));
   };
 
   const scrollRightBy = () => {
     const el = railRef.current;
     if (!el) return;
+    const step = getStep();
     const max = el.scrollWidth - el.clientWidth;
     animateTo(Math.min(max, el.scrollLeft + step));
   };
 
+  // --- drag to scroll -------------------------------------------------------
   const drag = useRef({ active: false, startX: 0, startLeft: 0 });
   const getX = (e) => ("touches" in e ? e.touches[0].clientX : e.clientX);
 
   const onDragStart = (e) => {
-    const rail = railRef.current;
-    if (!rail) return;
+    const el = railRef.current;
+    if (!el) return;
     drag.current.active = true;
     drag.current.startX = getX(e);
-    drag.current.startLeft = rail.scrollLeft;
-    rail.classList.add("dragging");
+    drag.current.startLeft = el.scrollLeft;
+    el.classList.add("dragging");
   };
 
   const onDragMove = (e) => {
-    const rail = railRef.current;
-    if (!rail || !drag.current.active) return;
+    const el = railRef.current;
+    if (!el || !drag.current.active) return;
     const dx = getX(e) - drag.current.startX;
-    rail.scrollLeft = drag.current.startLeft - dx;
+    el.scrollLeft = drag.current.startLeft - dx;
   };
 
   const onDragEnd = () => {
-    const rail = railRef.current;
-    if (!rail) return;
+    const el = railRef.current;
+    if (!el) return;
     drag.current.active = false;
-    rail.classList.remove("dragging");
+    el.classList.remove("dragging");
   };
 
   return (
@@ -112,18 +132,24 @@ export default function SkillSet() {
       {!atEnd && <FaderRight />}
 
       <ArrowBtn
+        type="button"
         aria-label="Scroll left"
         onClick={scrollLeftBy}
         data-side="left"
         disabled={atStart}
-      >‹</ArrowBtn>
+      >
+        ‹
+      </ArrowBtn>
 
       <ArrowBtn
+        type="button"
         aria-label="Scroll right"
         onClick={scrollRightBy}
         data-side="right"
         disabled={atEnd}
-      >›</ArrowBtn>
+      >
+        ›
+      </ArrowBtn>
 
       <Rail
         ref={railRef}
@@ -136,10 +162,14 @@ export default function SkillSet() {
         onTouchEnd={onDragEnd}
       >
         {skills.map(({ name, icon, color }, i) => (
-          <Item key={name} ref={i === 0 ? firstItemRef : undefined}>
+          <Item key={name} data-card ref={i === 0 ? firstItemRef : undefined}>
             <IconHole>
-              <Iconify icon={icon} width="28" height="28"
-                       style={color ? { color } : undefined} />
+              <Iconify
+                icon={icon}
+                width="28"
+                height="28"
+                style={color ? { color } : undefined}
+              />
             </IconHole>
             <Label>{name}</Label>
           </Item>
