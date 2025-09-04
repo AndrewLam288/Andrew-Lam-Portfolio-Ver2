@@ -8,7 +8,10 @@ export const Title = styled.h3`
 export const Grid = styled.div`
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const Tile = styled(Card)`
@@ -125,3 +128,9 @@ export const ZoomImg = styled.img`
   -webkit-user-drag: none;
   user-select: none;
 `;
+
+export const SectionCard = styled(Card)`
+  padding: 16px;
+  margin-bottom: 12px;
+`;
+

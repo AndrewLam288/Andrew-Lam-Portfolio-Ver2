@@ -7,7 +7,8 @@ import {
   StatusTag, Meta, Buttons, LinkButton, CalendarWrap,
   ContribRow, YearList, YearButton
 } from "./Projects.styles";
-import { FiExternalLink, FiGithub, FiFolder, FiGrid, FiBookmark } from "react-icons/fi";
+import { FiExternalLink, FiGithub, FiFolder, FiBookmark } from "react-icons/fi";
+import { GoRepo } from "react-icons/go";
 
 const GITHUB_USERNAME = "AndrewLam288"; // <-- your GitHub handle
 
@@ -81,7 +82,7 @@ export default function Projects() {
               <Card key={p.id}>
                 <HeaderRow>
                   <NameRow>
-                    <ProjectBadge $public={isPublic}><FiBookmark /></ProjectBadge>
+                    <ProjectBadge $public={isPublic}><GoRepo /></ProjectBadge>
                     <strong>{p.title}</strong>
                   </NameRow>
 

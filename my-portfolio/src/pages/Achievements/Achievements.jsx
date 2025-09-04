@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {
-  Title, Grid, Tile, Small, Button
+  Title, Grid, Tile, Small, Button, SectionCard
 } from "./Achievements.styles";
 import { fetchCertificates } from "../../services/cms";
 import CertificateModal from "./CertificateModal"; 
@@ -17,18 +17,20 @@ export default function Achievements() {
 
   return (
     <>
-      <Title>Licenses &amp; Certifications</Title>
-      <Grid>
-        {items.map(a => (
-          <Tile key={a.id || a.title}>
-            <strong>{a.title}</strong>
-            <Small>{a.issuer} • Issued {a.date}</Small>
-            {a.imgUrl && (
-              <Button onClick={() => setActive(a)}>Show Credential</Button>
-            )}
-          </Tile>
-        ))}
-      </Grid>
+      <SectionCard>
+        <Title>Licenses &amp; Certifications</Title>
+        <Grid>
+          {items.map(a => (
+            <Tile key={a.id || a.title}>
+              <strong>{a.title}</strong>
+              <Small>{a.issuer} • Issued {a.date}</Small>
+              {a.imgUrl && (
+                <Button onClick={() => setActive(a)}>Show Credential</Button>
+              )}
+            </Tile>
+          ))}
+        </Grid>
+      </SectionCard>
 
       {active && CertificateModal && (
         <CertificateModal
