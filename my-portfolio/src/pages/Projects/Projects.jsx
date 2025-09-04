@@ -1,58 +1,125 @@
-import { Section, Title, Grid, Item, Chip, TagRow } from "./Projects.styles";
+import { useEffect, useState } from "react";
+import GitHubCalendar from "react-github-calendar";
+import { fetchProjects } from "../../services/cms";
+import {
+  SectionCard, TitleRow, TitleBadge, SectionTitle,
+  Grid, Card, HeaderRow, NameRow, ProjectBadge,
+  StatusTag, Meta, Buttons, LinkButton, CalendarWrap,
+  ContribRow, YearList, YearButton
+} from "./Projects.styles";
+import { FiExternalLink, FiGithub, FiFolder, FiGrid, FiBookmark } from "react-icons/fi";
 
-const projects = [
-  { name: "PMtron", visibility: "Public", created: "Aug 2025" },
-  { name: "Pet Boarding", visibility: "Private", created: "Jul 2025" },
-  { name: "BuChatGo", visibility: "Public", created: "May 2025" },
-  { name: "Admin Dashboard", visibility: "Private", created: "Jan 2025" },
-];
-
-const featured = [
-  { name: "L-CORE HRIS", desc: "Web-based HRIS to streamline operations.", tags: ["React", "styled-components", "Ant Design"] },
-  { name: "Zyphora Crypto", desc: "Fictional crypto landing page.", tags: ["React JS", "Vite", "emotion"] },
-];
+const GITHUB_USERNAME = "AndrewLam288"; // <-- your GitHub handle
 
 export default function Projects() {
+  const [items, setItems] = useState([]);
+  const NOW = new Date().getFullYear();
+  const [year, setYear] = useState(NOW);
+  const years = [NOW, NOW - 1, NOW - 2];
+
+  useEffect(() => {
+    fetchProjects().then(setItems).catch(() => setItems([]));
+  }, []);
+
   return (
     <>
-      <Section>
-        <Title>Contributions</Title>
-        <div style={{ opacity: 0.8, fontSize: 13, marginTop: 6 }}>
-          GitHub heatmap placeholder
-        </div>
-      </Section>
+      {/* Contributions box */}
+      <SectionCard>
+        <TitleRow>
+          <TitleBadge $bg="#F1F5FF" $fg="#0F172A"><FiGithub /></TitleBadge>
+          <SectionTitle>Contributions</SectionTitle>
+        </TitleRow>
+        <ContribRow>
+          <CalendarWrap>
+            <a
+              href={`https://github.com/${GITHUB_USERNAME}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: "none" }}
+            >
+              <GitHubCalendar
+                username={GITHUB_USERNAME}
+                colorScheme={document.documentElement.classList.contains("dark") ? "dark" : "light"}
+                blockSize={12}
+                blockMargin={3}
+                fontSize={12}
+                year={year}
+              />
+            </a>
+          </CalendarWrap>
 
-      <Section>
-        <Title>Projects</Title>
-        <Grid style={{ marginTop: 12 }}>
-          {projects.map((p) => (
-            <Item key={p.name}>
-              <strong>{p.name}</strong>
-              <div style={{ fontSize: 12 }}>Created on {p.created}</div>
-              <div style={{ marginTop: 8 }}>
-                <Chip>{p.visibility}</Chip>
-              </div>
-            </Item>
-          ))}
+          <YearList>
+            {years.map((y) => (
+              <YearButton
+                key={y}
+                aria-current={y === year ? "true" : undefined}
+                onClick={() => setYear(y)}
+              >
+                {y}
+              </YearButton>
+            ))}
+          </YearList>
+        </ContribRow>
+
+      </SectionCard>
+
+      {/* Projects box (your existing tiles kept intact) */}
+      <SectionCard>
+        <TitleRow>
+          <TitleBadge $bg="#E1F0FF" $fg="#1D4ED8"><FiFolder /></TitleBadge>
+          <SectionTitle>Projects</SectionTitle>
+        </TitleRow>
+
+        <Grid>
+          {items.map((p) => {
+            const isPublic = (p.visibility || "").toLowerCase() === "public";
+            const createdLabel =
+              p.createdLabel ??
+              new Date(p.date).toLocaleString("en-US", { month: "short", year: "numeric" });
+
+            return (
+              <Card key={p.id}>
+                <HeaderRow>
+                  <NameRow>
+                    <ProjectBadge $public={isPublic}><FiBookmark /></ProjectBadge>
+                    <strong>{p.title}</strong>
+                  </NameRow>
+
+                  <StatusTag $public={isPublic}>
+                    {isPublic ? "Public" : "Private"}
+                  </StatusTag>
+                </HeaderRow>
+
+                <Meta>Created on {createdLabel}</Meta>
+
+                <Buttons>
+                  {p.demoUrl && (
+                    <LinkButton
+                      href={p.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Open live demo"
+                    >
+                      <FiExternalLink /> Live demo
+                    </LinkButton>
+                  )}
+
+                  {p.repoUrl && (
+                    <LinkButton
+                      href={p.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Open GitHub repository"
+                    >
+                      <FiGithub /> GitHub
+                    </LinkButton>
+                  )}
+                </Buttons>
+              </Card>
+            );
+          })}
         </Grid>
-      </Section>
-
-      <Section>
-        <Title>Featured</Title>
-        <div style={{ display: "grid", gap: 12, marginTop: 12 }}>
-          {featured.map((f) => (
-            <Item key={f.name}>
-              <strong>{f.name}</strong>
-              <p style={{ margin: "6px 0 10px" }}>{f.desc}</p>
-              <TagRow>
-                {f.tags.map((t) => (
-                  <Chip key={t}>{t}</Chip>
-                ))}
-              </TagRow>
-            </Item>
-          ))}
-        </div>
-      </Section>
+      </SectionCard>
     </>
   );
 }

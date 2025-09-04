@@ -52,7 +52,7 @@ export const Box = styled(Card)`
   position: relative;
   width: clamp(320px, 90vw, 980px);
   max-height: 90vh;
-  overflow: auto;
+  overflow: hidden;
   padding: 12px;
 `;
 
@@ -91,23 +91,25 @@ export const Close = styled.button`
 
 // Zoom Viewer styles
 export const ZoomViewport = styled.div`
-  /* acts as the “viewport” for the image */
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  max-height: 72vh;                /* same visual cap as before */
+  max-height: 72vh;
   overflow: hidden;
   user-select: none;
-  cursor: ${({ $isPanning }) => ($isPanning ? "grabbing" : "default")};
+  cursor: ${({ $isPanning, $canPan }) =>
+    $isPanning ? "grabbing" : $canPan ? "grab" : "default"};
   background: transparent;
+  overscroll-behavior: contain;
+  touch-action: none;
 `;
 
 export const ZoomStage = styled.div`
-  /* we transform this container (translate + scale) */
   will-change: transform;
   transform: translate(${({ $tx }) => $tx}px, ${({ $ty }) => $ty}px)
              scale(${({ $scale }) => $scale});
   transform-origin: center top;
+  user-select: none;
 `;
 
 export const ZoomImg = styled.img`
@@ -120,4 +122,6 @@ export const ZoomImg = styled.img`
   pointer-events: none;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: auto;
+  -webkit-user-drag: none;
+  user-select: none;
 `;
