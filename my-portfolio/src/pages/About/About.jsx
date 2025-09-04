@@ -11,6 +11,41 @@ import umnLogo from "../../assets/logos/UMN Morris Logo.png";
 import wssLogo from "../../assets/logos/WebSurfingStudios Logo.png";
 import marieLogo from "../../assets/logos/Marie Curie High School logo.png";
 
+const AboutText = () => (
+  <>
+    <p>
+      I’m a Junior Software Engineer passionate about full-stack development,
+      building apps that combine strong backend architecture with clean, user-friendly
+      design. Skilled in React, ASP.NET/C#, SQL, and Node.js, I’ve contributed to
+      platforms like{' '}
+      <a href="https://pmtron.com/" target="_blank" rel="noopener noreferrer"><b>PMtron</b></a>
+      {', '}an AI-powered project manager, and{' '}
+      <a href="https://buchatgo.onrender.com/" target="_blank" rel="noopener noreferrer"><b>BuChatGo</b></a>
+      {', '}a real-time chat app.
+    </p>
+
+    <p>
+      At Web Surfing Studios, I helped launch{' '}
+      <a href="https://pmtron.com/" target="_blank" rel="noopener noreferrer"><b>PMtron</b></a>{' '}
+      by implementing layered architectures, fixing migration issues, and ranking among
+      the top contributors. I’ve also built collaborative tools like {' '}
+      <a href="https://github.com/UMM-CSci-3601-S24/iter-3-that?tab=readme-ov-file" target="_blank" rel="noopener noreferrer"><b>Scav-a-Snap,</b></a>{' '}
+      blending scalable backends with responsive frontends tested by live users.
+    </p>
+
+    <p>
+      Outside of web dev, I explore <b>Unity/C#</b> to prototype indie horror games,
+      experimenting with narrative, suspense, and immersive design. I’m always eager to
+      learn, try new frameworks, and push my creativity beyond code.
+    </p>
+
+    <p>
+      Let’s connect if you’re interested in building together or chatting about tech and
+      game development!
+    </p>
+  </>
+);
+
 const certificates = [
   { title: "British Council IELTS", issuer: "British Council", date: "March 2022", logo: britishLogo },
 ];
@@ -22,12 +57,12 @@ const education = [
     note: "GPA: 3.431/4.0\nDean's Honor List: Fall 2023, Spring 2024, Fall 2024",
     logo: umnLogo
   },
-  
+
   {
-  school: "Marie Curie High School, Ho Chi Minh City",
-  range: "Graduated 2022",
-  logo: marieLogo
-}];
+    school: "Marie Curie High School, Ho Chi Minh City",
+    range: "Graduated 2022",
+    logo: marieLogo
+  }];
 
 const experience = [
   {
@@ -87,15 +122,19 @@ export default function About() {
 
         {expanded ? (
           <Body style={{ marginTop: 8 }}>
-            {/* ...your paragraphs unchanged... */}
-            <Toggle type="button" aria-expanded onClick={() => setExpanded(false)}>See less</Toggle>
+            <AboutText />
+            <Toggle type="button" aria-expanded onClick={() => setExpanded(false)}>
+              See less
+            </Toggle>
           </Body>
         ) : (
           <>
             <BodyCollapsed style={{ marginTop: 8 }}>
-              {/* ...your collapsed paragraph unchanged... */}
+              <AboutText />
             </BodyCollapsed>
-            <Toggle type="button" aria-expanded={false} onClick={() => setExpanded(true)}>See more</Toggle>
+            <Toggle type="button" aria-expanded={false} onClick={() => setExpanded(true)}>
+              See more
+            </Toggle>
           </>
         )}
       </Section>
