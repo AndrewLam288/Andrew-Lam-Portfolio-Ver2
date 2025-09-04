@@ -28,4 +28,96 @@ export const Button = styled.button`
   background: ${({ theme }) => theme.colors.surface};
   border: 1px solid ${({ theme }) => theme.colors.border};
   color: ${({ theme }) => theme.colors.text};
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(0.98);
+  }
+`;
+
+// Lightbox styles
+export const Lightbox = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+`;
+
+export const Box = styled(Card)`
+  position: relative;
+  width: clamp(320px, 90vw, 980px);
+  max-height: 90vh;
+  overflow: auto;
+  padding: 12px;
+`;
+
+export const CertImage = styled.img`
+  display: block;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  max-height: 72vh;
+  object-fit: contain;
+  margin: 0 auto;
+  border-radius: 10px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+export const MetaRow = styled.div`
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const Close = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+`;
+
+// Zoom Viewer styles
+export const ZoomViewport = styled.div`
+  /* acts as the “viewport” for the image */
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  max-height: 72vh;                /* same visual cap as before */
+  overflow: hidden;
+  user-select: none;
+  cursor: ${({ $isPanning }) => ($isPanning ? "grabbing" : "default")};
+  background: transparent;
+`;
+
+export const ZoomStage = styled.div`
+  /* we transform this container (translate + scale) */
+  will-change: transform;
+  transform: translate(${({ $tx }) => $tx}px, ${({ $ty }) => $ty}px)
+             scale(${({ $scale }) => $scale});
+  transform-origin: center top;
+`;
+
+export const ZoomImg = styled.img`
+  display: block;
+  max-height: 72vh;
+  height: auto;
+  width: auto;
+  border-radius: 10px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  pointer-events: none;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: auto;
 `;
