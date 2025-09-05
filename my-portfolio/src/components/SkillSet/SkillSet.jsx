@@ -4,17 +4,24 @@ import {
   ArrowBtn, FaderLeft, FaderRight
 } from "./SkillSet.styles";
 import { Icon as Iconify } from "@iconify/react";
-import { skills } from "./skills";
+import { fetchSkills } from "../../services/cms";
 
 export default function SkillSet() {
   const railRef = useRef(null);
   const firstItemRef = useRef(null);
 
+  const [items, setItems] = useState([]);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
   const [cardWidth, setCardWidth] = useState(280); // measured later
 
-  // --- measurements ---------------------------------------------------------
+  useEffect(() => {
+    fetchSkills()
+      .then((list) => setItems(list))
+      .catch(() => setItems([]));
+  }, []);
+
+  // measurements
   const measure = () => {
     // card width (icon + label + internal padding)
     const node = firstItemRef.current;
@@ -62,7 +69,7 @@ export default function SkillSet() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // --- smooth scrolling -----------------------------------------------------
+  // smooth scrolling
   const animateTo = (targetLeft, duration = 520) => {
     const el = railRef.current;
     if (!el) return;
@@ -97,7 +104,7 @@ export default function SkillSet() {
     animateTo(Math.min(max, el.scrollLeft + step));
   };
 
-  // --- drag to scroll -------------------------------------------------------
+  // drag to scroll
   const drag = useRef({ active: false, startX: 0, startLeft: 0 });
   const getX = (e) => ("touches" in e ? e.touches[0].clientX : e.clientX);
 
@@ -161,7 +168,7 @@ export default function SkillSet() {
         onTouchMove={(e) => { onDragMove(e); e.preventDefault(); }}
         onTouchEnd={onDragEnd}
       >
-        {skills.map(({ name, icon, color }, i) => (
+        {items.map(({ name, icon, color }, i) => (
           <Item key={name} data-card ref={i === 0 ? firstItemRef : undefined}>
             <IconHole>
               <Iconify

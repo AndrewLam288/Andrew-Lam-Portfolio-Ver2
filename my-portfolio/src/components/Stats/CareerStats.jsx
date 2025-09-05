@@ -1,12 +1,28 @@
-import { Wrap, Grid, Stat, H, P } from './CareerStats.styles'
+import { useEffect, useState } from 'react';
+import { Wrap, Grid, Stat, H, P } from './CareerStats.styles';
+import { fetchCareerStats } from '../../services/cms';
 
 export default function CareerStats() {
-  const stats = [
+  const [stats, setStats] = useState([
     { value: '1', label: 'years' },
-    { value: '0', label: 'Certificates' },
-    { value: '5', label: 'Projects' },
-    { value: '0', label: 'Techs' },
-  ] 
+    { value: '1', label: 'Certificates' },
+    { value: '6', label: 'Projects' },
+    { value: '18', label: 'Techs' },
+  ]);
+
+  useEffect(() => {
+    fetchCareerStats()
+      .then((s) =>
+        setStats([
+          { value: String(s.years),        label: 'years' },
+          { value: String(s.certificates), label: 'Certificates' },
+          { value: String(s.projects),     label: 'Projects' },
+          { value: String(s.techs),        label: 'Techs' },
+        ])
+      )
+      .catch(() => {});
+  }, []);
+
   return (
     <Wrap>
       <H>Career Stats</H>
@@ -19,5 +35,5 @@ export default function CareerStats() {
         ))}
       </Grid>
     </Wrap>
-  )
+  );
 }

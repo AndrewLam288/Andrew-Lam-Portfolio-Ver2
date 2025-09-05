@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Section, TitleRow, TitleText, TitleBadge,
   Body, BodyCollapsed, Toggle,
@@ -6,110 +6,30 @@ import {
   ItemHeader, Logo, LogoSlot, TitleStack
 } from "./About.styles";
 import { FiUser, FiBookOpen, FiBriefcase, FiAward } from "react-icons/fi";
-import britishLogo from "../../assets/logos/British Council logo.png";
-import umnLogo from "../../assets/logos/UMN Morris Logo.png";
-import wssLogo from "../../assets/logos/WebSurfingStudios Logo.png";
-import marieLogo from "../../assets/logos/Marie Curie High School logo.png";
 
-const AboutText = () => (
-  <>
-    <p>
-      I’m a Junior Software Engineer passionate about full-stack development,
-      building apps that combine strong backend architecture with clean, user-friendly
-      design. Skilled in React, ASP.NET/C#, SQL, and Node.js, I’ve contributed to
-      platforms like{' '}
-      <a href="https://pmtron.com/" target="_blank" rel="noopener noreferrer"><b>PMtron</b></a>
-      {', '}an AI-powered project manager, and{' '}
-      <a href="https://buchatgo.onrender.com/" target="_blank" rel="noopener noreferrer"><b>BuChatGo</b></a>
-      {', '}a real-time chat app.
-    </p>
-
-    <p>
-      At Web Surfing Studios, I helped launch{' '}
-      <a href="https://pmtron.com/" target="_blank" rel="noopener noreferrer"><b>PMtron</b></a>{' '}
-      by implementing layered architectures, fixing migration issues, and ranking among
-      the top contributors. I’ve also built collaborative tools like {' '}
-      <a href="https://github.com/UMM-CSci-3601-S24/iter-3-that?tab=readme-ov-file" target="_blank" rel="noopener noreferrer"><b>Scav-a-Snap,</b></a>{' '}
-      blending scalable backends with responsive frontends tested by live users.
-    </p>
-
-    <p>
-      Outside of web dev, I explore <b>Unity/C#</b> to prototype indie horror games,
-      experimenting with narrative, suspense, and immersive design. I’m always eager to
-      learn, try new frameworks, and push my creativity beyond code.
-    </p>
-
-    <p>
-      Let’s connect if you’re interested in building together or chatting about tech and
-      game development!
-    </p>
-  </>
-);
-
-const certificates = [
-  { title: "British Council IELTS", issuer: "British Council", date: "March 2022", logo: britishLogo },
-];
-
-const education = [
-  {
-    school: "University of Minnesota, Morris — B.A. Computer Science",
-    range: "August 2022 - May 2026",
-    note: "GPA: 3.431/4.0\nDean's Honor List: Fall 2023, Spring 2024, Fall 2024",
-    logo: umnLogo
-  },
-
-  {
-    school: "Marie Curie High School, Ho Chi Minh City",
-    range: "Graduated 2022",
-    logo: marieLogo
-  }];
-
-const experience = [
-  {
-    role: "Junior Software Engineer",
-    org: "Web Surfing Studios",
-    range: "January 2025 — Present",
-    logo: wssLogo,
-    note: `• Contributed to the public release of pmtron.com, an AI-powered project management platform, by collaborating with a remote team using agile sprints and version control.
-• Participated in DevOps processes, including database migration coordination and environment-specific testing using CI/CD pipelines integrated with Web Surfing Studios’ internal Git platform.
-• Improved system scalability and maintainability by introducing a layered architecture and controller services, refactoring direct database access out of controllers.
-• Resolved backend deployment failures by debugging Entity Framework migration conflicts and aligning MySQL schemas in CI/CD environments.
-• Diagnosed and fixed validation issues across desktop and mobile by debugging JavaScript behavior and refining Bootstrap form error handling.
-• Contributed ~21% of the PMtron codebase, ranking #2 in team contributions and accelerating project delivery.`
-  },
-  {
-    role: "Archives for All: Creating Accessible Digital Archives Collections",
-    org: "University of Minnesota, Morris",
-    range: "August 2025 — Present",
-    logo: umnLogo,
-    note: `• Improve accessibility of university archival platforms (Digital Well and Prairie Portal).
-• Conducted detailed audits of digital collections (events, books, media) against official accessibility standards, identifying errors, limitations, and compliance rates.
-• Produced a professional report with quantified findings and actionable recommendations, guiding the Archives toward meeting 2026 accessibility requirements.
-• Collaborated with faculty supervisor to ensure recommendations addressed both new and legacy content, balancing compliance with usability.`
-  },
-  {
-    role: "Help Desk Assistant",
-    org: "University of Minnesota, Morris",
-    range: "August 2022 — May 2023",
-    logo: umnLogo,
-    note: `• Resolved 300+ hardware and software support requests to improve campus-wide IT responsiveness using diagnostic tools, ticketing systems, and escalation procedures.
-• Delivered one-on-one tech support and walkthroughs for login, printing, and network connectivity issues for students and faculty.`
-  },
-  {
-    role: "Custodial Assistant",
-    org: "University of Minnesota, Morris",
-    range: "August 2022 — May 2023",
-    logo: umnLogo,
-    note: `• Maintained a clean and orderly environment for 200+ daily library visitors.
-• Demonstrated a strong work ethic through early morning shifts and consistent attendance.
-• Practiced attention to detail and time management while balancing academic responsibilities.`
-  },
-];
+import {
+  fetchAboutHtml,
+  fetchEducation,
+  fetchExperience,
+  fetchCertificatesPreview,
+} from "../../services/cms";
 
 export default function About() {
   const [expanded, setExpanded] = useState(false);
   const [expOpen, setExpOpen] = useState({});
   const toggleExp = (i) => setExpOpen((s) => ({ ...s, [i]: !s[i] }));
+
+  const [aboutHtml, setAboutHtml] = useState("");
+  const [education, setEducation] = useState([]);
+  const [experience, setExperience] = useState([]);
+  const [certificates, setCertificates] = useState([]);
+
+  useEffect(() => {
+    fetchAboutHtml().then(setAboutHtml).catch(() => setAboutHtml(""));
+    fetchEducation().then(setEducation).catch(() => setEducation([]));
+    fetchExperience().then(setExperience).catch(() => setExperience([]));
+    fetchCertificatesPreview(1).then(setCertificates).catch(() => setCertificates([])); // show 1 like before
+  }, []);
 
   return (
     <>
@@ -122,7 +42,7 @@ export default function About() {
 
         {expanded ? (
           <Body style={{ marginTop: 8 }}>
-            <AboutText />
+            <div dangerouslySetInnerHTML={{ __html: aboutHtml }} />
             <Toggle type="button" aria-expanded onClick={() => setExpanded(false)}>
               See less
             </Toggle>
@@ -130,7 +50,7 @@ export default function About() {
         ) : (
           <>
             <BodyCollapsed style={{ marginTop: 8 }}>
-              <AboutText />
+              <div dangerouslySetInnerHTML={{ __html: aboutHtml }} />
             </BodyCollapsed>
             <Toggle type="button" aria-expanded={false} onClick={() => setExpanded(true)}>
               See more
@@ -148,9 +68,9 @@ export default function About() {
 
         <List style={{ marginTop: 12 }}>
           {education.map((e) => (
-            <Row key={e.school}>
+            <Row key={e.id || e.school}>
               <ItemHeader>
-                <LogoSlot>{e.logo && <Logo src={e.logo} alt={e.school} />}</LogoSlot>
+                <LogoSlot>{e.logoUrl && <Logo src={e.logoUrl} alt={e.school} />}</LogoSlot>
                 <TitleStack>
                   <div className="title"><strong>{e.school}</strong></div>
                   <Sub>{e.range}</Sub>
@@ -171,9 +91,9 @@ export default function About() {
 
         <List style={{ marginTop: 12 }}>
           {experience.map((x, i) => (
-            <Row key={`${x.role}-${i}`}>
+            <Row key={x.id || `${x.role}-${i}`}>
               <ItemHeader>
-                <LogoSlot>{x.logo && <Logo src={x.logo} alt={x.org} />}</LogoSlot>
+                <LogoSlot>{x.logoUrl && <Logo src={x.logoUrl} alt={x.org} />}</LogoSlot>
                 <TitleStack>
                   <div className="title"><strong>{x.role}</strong> — {x.org}</div>
                   <Sub>{x.range}</Sub>
@@ -207,9 +127,9 @@ export default function About() {
 
         <List style={{ marginTop: 12 }}>
           {certificates.map((c) => (
-            <Row key={c.title}>
+            <Row key={c.id || c.title}>
               <ItemHeader>
-                <LogoSlot>{c.logo && <Logo src={c.logo} alt={c.issuer} />}</LogoSlot>
+                <LogoSlot>{c.logoUrl && <Logo src={c.logoUrl} alt={c.issuer} />}</LogoSlot>
                 <TitleStack>
                   <div className="title"><strong>{c.title}</strong></div>
                   <Sub>{c.issuer} • Issued {c.date}</Sub>

@@ -3,7 +3,7 @@ import {
   Title, Grid, Tile, Small, Button, SectionCard
 } from "./Achievements.styles";
 import { fetchCertificates } from "../../services/cms";
-import CertificateModal from "./CertificateModal"; 
+import CertificateModal from "./CertificateModal";
 
 export default function Achievements() {
   const [items, setItems] = useState([]);
@@ -22,8 +22,25 @@ export default function Achievements() {
         <Grid>
           {items.map(a => (
             <Tile key={a.id || a.title}>
-              <strong>{a.title}</strong>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                {a.logoUrl && (
+                  <img
+                    src={a.logoUrl}
+                    alt={a.issuer || a.title}
+                    style={{
+                      width: 28,
+                      height: 28,
+                      objectFit: "contain",
+                      borderRadius: 6,
+                      border: "1px solid rgba(0,0,0,.08)"
+                    }}
+                  />
+                )}
+                <strong>{a.title}</strong>
+              </div>
+
               <Small>{a.issuer} • Issued {a.date}</Small>
+
               {a.imgUrl && (
                 <Button onClick={() => setActive(a)}>Show Credential</Button>
               )}
