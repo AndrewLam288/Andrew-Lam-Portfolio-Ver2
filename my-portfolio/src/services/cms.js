@@ -91,6 +91,47 @@ const CAREER_STATS_QUERY = /* GraphQL */ `
   }
 `;
 
+const FEATURED_QUERY = /* GraphQL */ `
+  query Featured {
+    featuredItems(orderBy: order_ASC, stage: PUBLISHED) {
+      id
+      url
+      order
+      image { url }
+    }
+  }
+`;
+
+const HERO_QUERY = /* GraphQL */ `
+  query Hero {
+    heros: heroes(first: 1, stage: PUBLISHED) {
+      id
+      banner { url }
+    }
+  }
+`;
+
+export async function fetchHeroBanner() {
+  try {
+    const { heros } = await hygraph.request(HERO_QUERY);
+    const url = heros?.[0]?.banner?.url || null;
+    return url ? `${url}?auto=format&fm=webp&q=85` : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchFeatured() {
+  const { featuredItems } = await hygraph.request(FEATURED_QUERY);
+  return (featuredItems || []).map((f, i) => ({
+    id: f.id,
+    href: f.url,
+    img: f.image?.url
+      ? `${f.image.url}?width=1600&height=1000&fit=crop&format=webp`
+      : null,
+    order: Number.isFinite(f.order) ? f.order : i + 1,
+  }));
+}
 
 export async function fetchCareerStats() {
   try {
