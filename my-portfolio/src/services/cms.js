@@ -111,6 +111,23 @@ const HERO_QUERY = /* GraphQL */ `
   }
 `;
 
+const RESUME_QUERY = /* GraphQL */ `
+  query Resume {
+    resumes(first: 1, stage: PUBLISHED) {
+      file { url }
+    }
+  }
+`;
+
+export async function fetchResumeUrl() {
+  try {
+    const { resumes } = await hygraph.request(RESUME_QUERY);
+    return resumes?.[0]?.file?.url || null;
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchHeroBanner() {
   try {
     const { heros } = await hygraph.request(HERO_QUERY);
